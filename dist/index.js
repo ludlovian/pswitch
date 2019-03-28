@@ -2,13 +2,13 @@
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var trigger = _interopDefault(require('trigger'));
+var Trigger = _interopDefault(require('trigger'));
 
 class PSwitch {
   constructor (value) {
     this._on = undefined;
-    this._whenOn = trigger();
-    this._whenOff = trigger();
+    this._whenOn = new Trigger();
+    this._whenOff = new Trigger();
     this.set(value);
   }
   set (value) {
@@ -16,10 +16,10 @@ class PSwitch {
     this._on = !!value;
     if (this._on) {
       this._whenOn.fire();
-      this._whenOff = trigger();
+      this._whenOff = new Trigger();
     } else {
       this._whenOff.fire();
-      this._whenOn = trigger();
+      this._whenOn = new Trigger();
     }
   }
   toggle () {
