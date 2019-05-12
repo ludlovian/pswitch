@@ -6,24 +6,35 @@ Awaitable switch
 ### PSwitch
 `sw = new PSwitch(initialState)`
 
-Creates a switch.
+Creates a multivariate switch, which can have any values
 
-### PSwitch#set
+### .set
 `sw.set(newState)`
 
-Sets the (Boolean) state of the switch
+Sets the state of the switch to a new value
 
-### PSwitch#value
+### .value
 `isSwitchOn = sw.value`
 
-Gets the current (Boolean) value of the switch
+Gets the current value of the switch
 
-### PSwitch#whenOn
-`await sw.whenOn`
+### .when
+`await sw.when(true)`
 
-A promise which resolves when the switch is turned on.
+A promise which resolves when the switch is set to this value
 
-### PSwitch#whenOff
-`await sw.whenOff`
+### PSwitch.Binary
 
-A promise which resolves when the switch is turned off
+A subclass of `PSwitch` which can only be `true` or `false`
+
+### .toggle
+
+Toggles a binary switch
+
+### .whenOn
+
+(Deprecated) Same as `.when(true)`
+
+### .whenOff
+
+(Deprecated) Same as `.when(false)`
