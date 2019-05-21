@@ -9,7 +9,7 @@ const isResolved = (p, ms = 20) =>
     setTimeout(() => resolve(false), ms)
   })
 
-test('basic switch', async t => {
+test('basic binary switch', async t => {
   const sw = new PSwitch.Binary()
   t.false(sw.value)
   t.true(await isResolved(sw.whenOff))
@@ -19,23 +19,24 @@ test('basic switch', async t => {
 
   sw.toggle()
   t.true(sw.value)
-  t.is(pOn, sw.whenOn)
+  t.true(await isResolved(pOn))
   t.false(await isResolved(sw.whenOff))
   t.true(await isResolved(sw.whenOn))
 })
 
-test('redundant set', async t => {
-  const sw = new PSwitch(true)
+test('basic switch', async t => {
+  const sw = new PSwitch('a')
+  t.is(sw.value, 'a')
+  t.false(await isResolved(sw.when('b')))
+  t.true(await isResolved(sw.when('a')))
 
-  t.true(sw.value)
-  const pOn = sw.whenOn
-  const pOff = sw.whenOff
+  sw.set('a')
+  t.false(await isResolved(sw.when('b')))
+  t.true(await isResolved(sw.when('a')))
 
-  sw.set(true)
-
-  t.true(sw.value)
-  t.is(pOn, sw.whenOn)
-  t.is(pOff, sw.whenOff)
+  sw.set('b')
+  t.false(await isResolved(sw.when('a')))
+  t.true(await isResolved(sw.when('b')))
 })
 
 test('multiple values', async t => {

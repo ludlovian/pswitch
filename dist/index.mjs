@@ -1,33 +1,42 @@
 import Trigger from 'trigger';
 
+const priv = Symbol('priv');
 class PSwitch {
   constructor (value) {
-    this._value = undefined;
-    this._triggers = new Map();
-    this.set(value);
+    Object.defineProperty(this, priv, {
+      value: {
+        value,
+        triggers: new Map()
+      }
+    });
+    getTrigger(this, value).fire();
   }
   set (value) {
-    let prevTrg = this._triggers.get(this._value);
-    if (prevTrg) {
-      if (value === this._value) return
-      this._triggers.set(this._value, new Trigger());
-    }
-    this._value = value;
-    this.when(value).fire();
+    const p = this[priv];
+    if (value === p.value) return
+    p.triggers.delete(p.value);
+    p.value = value;
+    getTrigger(this, value).fire();
   }
   when (value) {
-    let trg = this._triggers.get(value);
-    if (!trg) {
-      trg = new Trigger();
-      this._triggers.set(value, trg);
-    }
-    return trg
+    return new Promise(resolve => getTrigger(this, value).then(resolve))
   }
   get value () {
-    return this._value
+    return this[priv].value
   }
 }
+function getTrigger (sw, value) {
+  const p = sw[priv];
+  let trg = p.triggers.get(value);
+  if (trg) return trg
+  trg = new Trigger();
+  p.triggers.set(value, trg);
+  return trg
+}
 class BinaryPSWitch extends PSwitch {
+  constructor (value) {
+    super(Boolean(value));
+  }
   set (value) {
     super.set(Boolean(value));
   }
@@ -35,7 +44,7 @@ class BinaryPSWitch extends PSwitch {
     return super.when(Boolean(value))
   }
   toggle () {
-    this.set(!this._on);
+    this.set(!this.value);
   }
   get whenOn () {
     return this.when(true)
