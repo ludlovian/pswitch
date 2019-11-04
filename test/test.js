@@ -24,6 +24,14 @@ test('basic binary switch', async t => {
   t.true(await isResolved(sw.whenOn))
 })
 
+test('switch not awaited', async t => {
+  const sw = new PSwitch('a')
+  t.is(sw.value, 'a')
+
+  sw.set('b')
+  t.is(sw.value, 'b')
+})
+
 test('basic switch', async t => {
   const sw = new PSwitch('a')
   t.is(sw.value, 'a')
