@@ -1,37 +1,28 @@
-import Trigger from 'trigger';
-
-const priv = Symbol('priv');
+const resolved = Promise.resolve();
 class PSwitch {
   constructor (value) {
-    Object.defineProperty(this, priv, {
-      value: {
-        value,
-        triggers: new Map()
-      }
-    });
-    getTrigger(this, value).fire();
+    this.value = value;
+    this.awaiters = new Map();
   }
   set (value) {
-    const p = this[priv];
-    if (value === p.value) return
-    p.triggers.delete(p.value);
-    p.value = value;
-    getTrigger(this, value).fire();
+    if (value === this.value) return
+    this.value = value;
+    const callbacks = this.awaiters.get(value);
+    if (!callbacks) return
+    callbacks.forEach(callback => callback());
+    this.awaiters.delete(value);
   }
   when (value) {
-    return new Promise(resolve => getTrigger(this, value).then(resolve))
+    if (value === this.value) return resolved
+    return new Promise(resolve => {
+      const callbacks = this.awaiters.get(value);
+      if (callbacks) {
+        callbacks.push(resolve);
+      } else {
+        this.awaiters.set(value, [resolve]);
+      }
+    })
   }
-  get value () {
-    return this[priv].value
-  }
-}
-function getTrigger (sw, value) {
-  const p = sw[priv];
-  let trg = p.triggers.get(value);
-  if (trg) return trg
-  trg = new Trigger();
-  p.triggers.set(value, trg);
-  return trg
 }
 class BinaryPSWitch extends PSwitch {
   constructor (value) {
