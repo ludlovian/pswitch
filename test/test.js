@@ -9,21 +9,6 @@ const isResolved = (p, ms = 20) =>
     setTimeout(() => resolve(false), ms)
   })
 
-test('basic binary switch', async t => {
-  const sw = new PSwitch.Binary()
-  t.false(sw.value)
-  t.true(await isResolved(sw.whenOff))
-  t.false(await isResolved(sw.whenOn))
-
-  const pOn = sw.whenOn
-
-  sw.toggle()
-  t.true(sw.value)
-  t.true(await isResolved(pOn))
-  t.false(await isResolved(sw.whenOff))
-  t.true(await isResolved(sw.whenOn))
-})
-
 test('switch not awaited', async t => {
   const sw = new PSwitch('a')
   t.is(sw.value, 'a')
@@ -34,15 +19,19 @@ test('switch not awaited', async t => {
 
 test('basic switch', async t => {
   const sw = new PSwitch('a')
+
+  const whenA = sw.when('a')
+  const whenB = sw.when('b')
   t.is(sw.value, 'a')
-  t.false(await isResolved(sw.when('b')))
-  t.true(await isResolved(sw.when('a')))
+  t.true(await isResolved(whenA))
+  t.false(await isResolved(whenB))
 
   sw.set('a')
-  t.false(await isResolved(sw.when('b')))
-  t.true(await isResolved(sw.when('a')))
+  t.false(await isResolved(whenB))
 
   sw.set('b')
+  t.true(await isResolved(whenB))
+
   t.false(await isResolved(sw.when('a')))
   t.true(await isResolved(sw.when('b')))
 })

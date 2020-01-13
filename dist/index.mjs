@@ -1,4 +1,3 @@
-const resolved = Promise.resolve();
 class PSwitch {
   constructor (value) {
     this.value = value;
@@ -13,7 +12,7 @@ class PSwitch {
     this.awaiters.delete(value);
   }
   when (value) {
-    if (value === this.value) return resolved
+    if (value === this.value) return Promise.resolve()
     return new Promise(resolve => {
       const callbacks = this.awaiters.get(value);
       if (callbacks) {
@@ -24,26 +23,5 @@ class PSwitch {
     })
   }
 }
-class BinaryPSWitch extends PSwitch {
-  constructor (value) {
-    super(Boolean(value));
-  }
-  set (value) {
-    super.set(Boolean(value));
-  }
-  when (value) {
-    return super.when(Boolean(value))
-  }
-  toggle () {
-    this.set(!this.value);
-  }
-  get whenOn () {
-    return this.when(true)
-  }
-  get whenOff () {
-    return this.when(false)
-  }
-}
-PSwitch.Binary = BinaryPSWitch;
 
 export default PSwitch;

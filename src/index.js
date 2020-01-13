@@ -1,13 +1,3 @@
-'use strict'
-
-// PSwitch
-//
-// A promise-base multiple-value switch. You can `await` the switch being set
-// to a specific value
-//
-
-const resolved = Promise.resolve()
-
 export default class PSwitch {
   constructor (value) {
     this.value = value
@@ -24,7 +14,7 @@ export default class PSwitch {
   }
 
   when (value) {
-    if (value === this.value) return resolved
+    if (value === this.value) return Promise.resolve()
     return new Promise(resolve => {
       const callbacks = this.awaiters.get(value)
       if (callbacks) {
@@ -35,31 +25,3 @@ export default class PSwitch {
     })
   }
 }
-
-class BinaryPSWitch extends PSwitch {
-  constructor (value) {
-    super(Boolean(value))
-  }
-
-  set (value) {
-    super.set(Boolean(value))
-  }
-
-  when (value) {
-    return super.when(Boolean(value))
-  }
-
-  toggle () {
-    this.set(!this.value)
-  }
-
-  get whenOn () {
-    return this.when(true)
-  }
-
-  get whenOff () {
-    return this.when(false)
-  }
-}
-
-PSwitch.Binary = BinaryPSWitch

@@ -22,19 +22,3 @@ Gets the current value of the switch
 `await sw.when(true)`
 
 A promise which resolves when the switch is set to this value
-
-### PSwitch.Binary
-
-A subclass of `PSwitch` which can only be `true` or `false`
-
-### .toggle
-
-Toggles a binary switch
-
-### .whenOn
-
-(Deprecated) Same as `.when(true)`
-
-### .whenOff
-
-(Deprecated) Same as `.when(false)`
