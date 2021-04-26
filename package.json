@@ -3,34 +3,20 @@
   "version": "1.3.1",
   "description": "Promise-based switch",
   "repository": "https://github.com/ludlovian/pswitch",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "type": "module",
   "scripts": {
-    "clean": "rm -rf dist/ .nyc_output/ coverage/ node_modules/.cache/",
-    "format": "prettier-standard {src,test}/*.js",
-    "lint": "standard {src,test}/*.js|snazzy",
-    "test": "nyc ava",
-    "coverage": "npm run test && nyc report --reporter=html && sirv coverage -H '0.0.0.0' -p 8000",
-    "build": "rollup -c rollup.config.js"
+    "clean": "rm -rf coverage/ node_modules/.cache/",
+    "format": "prettier-standard {src,test}/*.mjs",
+    "lint": "standard {src,test}/*.mjs|snazzy",
+    "test": "c8 uvu",
+    "coverage": "npm run test && c8 report --reporter=html && sirv coverage -H '0.0.0.0' -p 8000"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "ava": "^3.10.1",
-    "esm": "^3.2.25",
-    "nyc": "^15.1.0",
-    "prettier-standard": "^16.4.1",
     "promise-goodies": "github:ludlovian/promise-goodies",
-    "rollup": "^2.22.0",
-    "rollup-plugin-cleanup": "^3.1.1",
-    "rollup-plugin-terser": "^6.1.0",
-    "sirv-cli": "^1.0.3",
-    "snazzy": "^8.0.0",
-    "standard": "^14.3.4"
-  },
-  "ava": {
-    "require": [
-      "esm"
-    ]
-  },
-  "dependencies": {}
+    "uvu": "^0.5.1"
+  }
 }
