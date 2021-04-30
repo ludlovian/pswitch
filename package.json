@@ -1,6 +1,6 @@
 {
   "name": "pswitch",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Promise-based switch",
   "repository": "https://github.com/ludlovian/pswitch",
   "main": "src/index.mjs",
