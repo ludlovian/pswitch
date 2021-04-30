@@ -3,8 +3,8 @@
   "version": "1.4.0",
   "description": "Promise-based switch",
   "repository": "https://github.com/ludlovian/pswitch",
-  "main": "dist/index.mjs",
-  "module": "dist/index.mjs",
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
   "type": "module",
   "scripts": {
     "clean": "rm -rf coverage/ node_modules/.cache/",
